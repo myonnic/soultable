@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoulTable</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0BBA37",
+                        "primary-dark": "#09a030",
+                        "accent": "#D9F030",
+                        "accent-dark": "#c2d828",
+                        "muted": "#f4f4f5",
+                        "muted-fg": "#71717a",
+                        "border-color": "#e4e4e7",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "card": "12px",
+                        "btn": "8px",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        input, select, textarea { font-family: 'Inter', sans-serif !important; }
+        /* shadcn-style focus ring */
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid #0BBA37 !important;
+            outline-offset: 2px;
+        }
+    </style>
+    <!-- 카카오 API 키 설정 — 발급 후 아래에 입력하세요 -->
+    <script>
+        window.__KAKAO_APP_KEY__ = 'ff1c66394e1eb97cfdf2ce018e59b1a5';
+    </script>
+
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
