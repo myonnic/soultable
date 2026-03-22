@@ -6,9 +6,10 @@ interface Props {
   onVoteClick: (id: string, status: string) => void;
   rooms: any[];
   onCreateGroup: () => void;
+  onLogout: () => void;
 }
 
-const ScheduleView: React.FC<Props> = ({ onVoteClick, rooms }) => {
+const ScheduleView: React.FC<Props> = ({ onVoteClick, rooms, onLogout }) => {
   const [mainTab, setMainTab] = useState<'solo' | 'group'>('group');
   const [filterTab, setFilterTab] = useState<'voting' | 'completed' | 'history'>('voting');
 
@@ -30,8 +31,13 @@ const ScheduleView: React.FC<Props> = ({ onVoteClick, rooms }) => {
   return (
     <div className="flex flex-col h-full bg-white overflow-hidden font-display">
       {/* Header */}
-      <header className="shrink-0 border-b border-gray-100 p-5 pt-14">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Schedule</h2>
+      <header className="shrink-0 border-b border-gray-100 p-5 pt-4">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Schedule</h2>
+          <button onClick={onLogout} className="size-9 bg-white border border-gray-200 rounded-lg flex shrink-0 items-center justify-center text-gray-600 shadow-sm hover:bg-gray-50 active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-lg">logout</span>
+          </button>
+        </div>
         {/* Main tabs */}
         <div className="flex bg-muted rounded-lg p-1 gap-1">
           {(['solo', 'group'] as const).map(tab => (

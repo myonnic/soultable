@@ -5,6 +5,7 @@ import { RESTAURANTS } from '../App';
 interface Props {
   onPlanClick: () => void;
   onRestaurantClick: (id: string) => void;
+  onLogout: () => void;
 }
 
 declare global {
@@ -18,7 +19,7 @@ const GANGNAM_LNG = 127.0276;
 
 type MapStatus = 'loading' | 'ready' | 'error' | 'no_key';
 
-const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick }) => {
+const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick, onLogout }) => {
   const [filters, setFilters] = useState<string[]>([]);
   const [mapStatus, setMapStatus] = useState<MapStatus>('loading');
   const [errorMsg, setErrorMsg] = useState('');
@@ -126,7 +127,7 @@ const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick }) => {
       el.innerHTML = `
         <div style="background:white;border:1.5px solid #e5e7eb;border-radius:8px;padding:4px 8px 4px 6px;display:flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(0,0,0,0.12);white-space:nowrap;margin-bottom:4px;font-family:Inter,sans-serif;">
           <span style="font-size:9px;color:#0BBA37;font-weight:700;">★</span>
-          <span style="font-size:11px;font-weight:600;color:#111827;max-width:90px;overflow:hidden;text-overflow:ellipsis;">${res.name}</span>
+          <span style="font-size:11px;font-weight:700;color:#0BBA37;max-width:90px;overflow:hidden;text-overflow:ellipsis;">${res.name}</span>
         </div>
         <div style="width:10px;height:10px;background:#0BBA37;border-radius:50%;border:2px solid white;box-shadow:0 2px 4px rgba(11,186,55,0.5);margin:0 auto;"></div>`;
       el.addEventListener('click', () => onRestaurantClick(res.id));
@@ -139,9 +140,8 @@ const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick }) => {
   return (
     <div className="h-full w-full relative overflow-hidden bg-gray-100 font-display">
       {/* Top bar */}
-      <div className="absolute top-0 left-0 right-0 z-[110] p-4 pt-12 flex flex-col gap-2 pointer-events-none">
+      <div className="absolute top-0 left-0 right-0 z-[110] p-4 pt-4 flex flex-col gap-2 pointer-events-none">
         <div className="flex gap-2">
-          <div className="w-9 h-9 shrink-0" />
           <div className="flex-1 bg-white border border-gray-200 rounded-lg h-10 px-3 flex items-center gap-2 pointer-events-auto shadow-sm">
             <span className="material-symbols-outlined text-muted-fg text-lg">search</span>
             <input
@@ -149,23 +149,32 @@ const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick }) => {
               className="bg-transparent border-none focus:ring-0 text-sm flex-1 text-gray-700 placeholder:text-muted-fg focus:outline-none"
             />
           </div>
-          <button className="size-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center pointer-events-auto shadow-sm">
-            <span className="material-symbols-outlined text-lg text-muted-fg">notifications</span>
+          <button className="size-10 bg-white border border-gray-200 rounded-lg flex shrink-0 items-center justify-center pointer-events-auto shadow-sm text-gray-600 hover:bg-gray-50 active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-lg">notifications</span>
+          </button>
+          <button onClick={onLogout} className="size-10 bg-white border border-gray-200 rounded-lg flex shrink-0 items-center justify-center pointer-events-auto shadow-sm text-gray-600 hover:bg-gray-50 active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-lg">logout</span>
           </button>
         </div>
 
-        <div className="flex gap-1.5 overflow-x-auto hide-scrollbar pointer-events-auto pb-1 pl-11">
-          {['Certified Halal', 'Vegan', 'Date spot', 'Casual'].map(f => (
+        <div className="flex gap-2 overflow-x-auto hide-scrollbar pointer-events-auto pb-1 px-1">
+          {[
+            { id: 'Certified Halal', emoji: '☪️' }, 
+            { id: 'Vegan', emoji: '🌿' }, 
+            { id: 'Date spot', emoji: '🍷' }, 
+            { id: 'Casual', emoji: '👕' }
+          ].map(f => (
             <button
-              key={f}
-              onClick={() => toggleFilter(f)}
-              className={`h-7 px-3 text-xs font-medium rounded-md whitespace-nowrap border transition-all ${
-                filters.includes(f)
-                  ? 'bg-primary text-white border-primary'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+              key={f.id}
+              onClick={() => toggleFilter(f.id)}
+              className={`h-8 px-3.5 flex items-center gap-1.5 text-xs font-semibold rounded-lg whitespace-nowrap border shadow-sm transition-all ${
+                filters.includes(f.id)
+                  ? 'bg-primary text-white border-primary shadow-primary/20'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
               }`}
             >
-              {f}
+              <span>{f.emoji}</span>
+              {f.id}
             </button>
           ))}
         </div>
@@ -207,7 +216,7 @@ const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick }) => {
       {/* Plan Meeting FAB */}
       <button
         onClick={onPlanClick}
-        className="fixed bottom-28 right-5 h-11 px-5 rounded-lg bg-primary text-white shadow-md flex items-center gap-1.5 active:scale-95 transition-transform z-[110] font-medium text-sm hover:bg-primary-dark"
+        className="absolute bottom-12 right-5 h-12 px-5 rounded-full bg-primary text-white shadow-lg shadow-primary/30 flex items-center gap-1.5 active:scale-95 transition-transform z-[110] font-bold text-sm hover:bg-primary-dark"
       >
         <span className="material-symbols-outlined text-lg">add</span>
         Plan Meeting

@@ -30,9 +30,10 @@ interface Props {
   onReviewWriteTrigger?: () => void;
   pendingAiVote: {chatId: string, timestamp: number} | null;
   onAiVoteConsumed: () => void;
+  onLogout: () => void;
 }
 
-const ChatView: React.FC<Props> = ({ role, activeChatId, onChatSelect, onVotingClick, rooms, onBackToRoot, onResDetail, onAiRecommendationTrigger, onReviewWriteTrigger, pendingAiVote, onAiVoteConsumed }) => {
+const ChatView: React.FC<Props> = ({ role, activeChatId, onChatSelect, onVotingClick, rooms, onBackToRoot, onResDetail, onAiRecommendationTrigger, onReviewWriteTrigger, pendingAiVote, onAiVoteConsumed, onLogout }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [recommendationPromptVisible, setRecommendationPromptVisible] = useState(false);
@@ -135,12 +136,17 @@ const ChatView: React.FC<Props> = ({ role, activeChatId, onChatSelect, onVotingC
   if (!activeChatId) {
     return (
       <div className="flex flex-col h-full bg-white">
-        <header className="p-5 pt-14 pb-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+        <header className="p-5 pt-4 pb-4 border-b border-gray-100 sticky top-0 bg-white z-10">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold text-gray-900">Chats</h2>
-            <button className="size-9 rounded-lg border border-gray-200 flex items-center justify-center text-muted-fg hover:bg-muted transition-colors">
-              <span className="material-symbols-outlined text-lg">search</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="size-9 bg-white border border-gray-200 rounded-lg flex shrink-0 items-center justify-center text-gray-600 shadow-sm hover:bg-gray-50 active:scale-95 transition-all">
+                <span className="material-symbols-outlined text-lg">search</span>
+              </button>
+              <button onClick={onLogout} className="size-9 bg-white border border-gray-200 rounded-lg flex shrink-0 items-center justify-center text-gray-600 shadow-sm hover:bg-gray-50 active:scale-95 transition-all">
+                <span className="material-symbols-outlined text-lg">logout</span>
+              </button>
+            </div>
           </div>
         </header>
         <div className="flex-1 overflow-y-auto divide-y divide-gray-100 pb-24">
@@ -176,7 +182,7 @@ const ChatView: React.FC<Props> = ({ role, activeChatId, onChatSelect, onVotingC
   // Chat room view
   return (
     <div className="flex flex-col h-full bg-gray-50 relative overflow-hidden font-display">
-      <header className="pt-12 pb-3 px-4 bg-white flex items-center justify-between border-b border-gray-100 z-[110] sticky top-0">
+      <header className="pt-4 pb-3 px-4 bg-white flex items-center justify-between border-b border-gray-100 z-[110] sticky top-0">
         <div className="flex items-center gap-3">
           <button onClick={() => { onBackToRoot(); }} className="size-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 active:scale-90 transition-transform">
             <span className="material-symbols-outlined text-lg">arrow_back</span>

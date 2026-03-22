@@ -6,7 +6,7 @@ import ScheduleView from './components/ScheduleView';
 import ChatView from './components/ChatView';
 import ProfileView from './components/ProfileView';
 import RoleSelector from './components/RoleSelector';
-import OnboardingView from './components/OnboardingView';
+import OnboardingView, { OnboardingData } from './components/OnboardingView';
 import PlanningFlow from './components/PlanningFlow';
 import MockOS from './components/MockOS';
 import MockMessenger from './components/MockMessenger';
@@ -14,6 +14,7 @@ import LoginView from './components/LoginView';
 import RestaurantDetailView from './components/RestaurantDetailView';
 import VotingDetailView from './components/VotingDetailView';
 import ReviewWriteView from './components/ReviewWriteView';
+import SettingsView from './components/SettingsView';
 
 export const RESTAURANTS: RestaurantData[] = [
   { id: 'r1', name: '조선옥 (Chosun-ok)', rating: 4.8, categories: ['한식', '갈비'], description: '70년 전통의 연탄 한우 갈비', matchMe: 92, matchCohort: 85, matchFriends: 78, img: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?q=80&w=2000', addressJibun: '강남구 역삼동 832-4', addressRoad: '테헤란로14길 6', phone: '02-555-0333', tags: ['Halal Friendly', 'Old school', 'Beef'], priceRange: '₩₩₩', location: { lat: '1200px', lng: '1400px' }, latlng: { lat: 37.5007, lng: 127.0336 } },
@@ -29,14 +30,19 @@ export const RESTAURANTS: RestaurantData[] = [
 ];
 
 
-type AppFlow = 'role_select' | 'os_lock' | 'messenger' | 'splash' | 'login' | 'onboarding' | 'main';
+type AppFlow = 'splash_intro' | 'welcome' | 'role_select' | 'os_lock' | 'messenger' | 'splash' | 'login' | 'onboarding' | 'main';
 
 const App: React.FC = () => {
   const [role, setRole] = useState<'host' | 'guest_member' | 'guest_new' | null>(null);
-  const [flow, setFlow] = useState<AppFlow>('role_select');
+  const [flow, setFlow] = useState<AppFlow>('splash_intro');
   const [view, setView] = useState<NavItem>(NavItem.EXPLORE);
   const [activeFlow, setActiveFlow] = useState<'none' | 'planning' | 'creating' | 'chat_ai'>('none');
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  
+  const [showSettings, setShowSettings] = useState(false);
+  const [showEditOnboarding, setShowEditOnboarding] = useState(false);
+  const [userDietProfile, setUserDietProfile] = useState<OnboardingData | null>(null);
+  const [appLanguage, setAppLanguage] = useState<'ko' | 'en'>('ko');
   
   const [selectedResId, setSelectedResId] = useState<string | null>(null);
   const [recommendationList, setRecommendationList] = useState<string[] | null>(null);
@@ -58,6 +64,10 @@ const App: React.FC = () => {
   ]);
 
   useEffect(() => {
+    if (flow === 'splash_intro') {
+      const timer = setTimeout(() => setFlow('welcome'), 2000);
+      return () => clearTimeout(timer);
+    }
     if (flow === 'splash') {
       const timer = setTimeout(() => {
         if (role === 'guest_member') {
@@ -74,7 +84,7 @@ const App: React.FC = () => {
     }
   }, [flow, role]);
 
-  const isAtDepth = !!selectedResId || !!activeVotingId || activeFlow !== 'none' || showReviewWrite;
+  const isAtDepth = !!selectedResId || !!activeVotingId || activeFlow !== 'none' || showReviewWrite || showSettings || showEditOnboarding;
 
   const addRoom = (room: ChatRoom) => {
     setRooms(prev => [room, ...prev]);
@@ -90,18 +100,27 @@ const App: React.FC = () => {
     setRecommendationList(null);
   };
 
+  const handleLogout = () => {
+    setRole(null);
+    setFlow('role_select');
+    setView(NavItem.EXPLORE);
+    setActiveChatId(null);
+  };
+
   const renderView = () => {
     switch (view) {
       case NavItem.EXPLORE: 
         return <HomeView 
           onPlanClick={() => setActiveFlow('planning')} 
           onRestaurantClick={(id) => openResDetail(id)}
+          onLogout={handleLogout}
         />;
       case NavItem.DINING: 
         return <ScheduleView 
           onVoteClick={(id, status) => { setView(NavItem.GROUPS); setActiveChatId('chat_1'); }} 
           rooms={rooms}
           onCreateGroup={() => setActiveFlow('creating')}
+          onLogout={handleLogout}
         />;
       case NavItem.GROUPS: 
         return <ChatView 
@@ -116,18 +135,29 @@ const App: React.FC = () => {
           onReviewWriteTrigger={() => setShowReviewWrite(true)}
           pendingAiVote={pendingAiVote}
           onAiVoteConsumed={() => setPendingAiVote(null)}
+          onLogout={handleLogout}
         />;
-      case NavItem.PROFILE: return <ProfileView />;
-      default: return <HomeView onPlanClick={() => {}} onRestaurantClick={(id) => openResDetail(id)} />;
+      case NavItem.SAVED: return <div className="p-8 text-center text-gray-500 animate-in fade-in">Saved restaurants placeholder</div>;
+      case NavItem.PROFILE: return (
+        <ProfileView 
+          userDietProfile={userDietProfile} 
+          onOpenSettings={() => setShowSettings(true)} 
+          onEditRestrictions={() => setShowEditOnboarding(true)}
+          onLogout={handleLogout}
+        />
+      );
+      default: return <HomeView onPlanClick={() => {}} onRestaurantClick={(id) => openResDetail(id)} onLogout={handleLogout} />;
     }
   };
 
+  if (flow === 'splash_intro') return <div className="flex flex-col items-center justify-center h-screen bg-primary"><div className="size-20 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-xl animate-bounce"><span className="material-symbols-outlined text-primary text-5xl" style={{fontVariationSettings:"'FILL' 1"}}>restaurant</span></div><h1 className="text-3xl font-bold text-white tracking-tight">SoulTable</h1><p className="text-white/80 mt-2 font-medium text-sm">Everyone at the table.</p></div>;
+  if (flow === 'welcome') return <div className="flex flex-col items-center justify-between h-screen bg-white p-6 pt-32 pb-12 animate-in fade-in duration-500"><div className="flex flex-col items-center text-center"><div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-8"><span className="material-symbols-outlined text-primary text-4xl" style={{fontVariationSettings:"'FILL' 1"}}>restaurant</span></div><h1 className="text-2xl font-bold text-gray-900 mb-3">Welcome to SoulTable!</h1><p className="text-sm text-gray-500 leading-relaxed max-w-[280px]">서로 다른 식단을 가진 모두가 함께 즐길 수 있는 식당을 찾아보세요.</p></div><button onClick={() => setFlow('onboarding')} className="w-full max-w-[430px] h-14 bg-primary text-white rounded-xl font-bold text-base shadow-lg shadow-primary/30 active:scale-95 transition-transform hover:bg-primary-dark">시작하기 (Get Started)</button></div>;
+  if (flow === 'onboarding') return <OnboardingView onComplete={(data) => { setUserDietProfile(data); setFlow('role_select'); }} />;
   if (flow === 'role_select') return <RoleSelector onSelect={(r) => { setRole(r); if (r === 'host') setFlow('main'); else if (r === 'guest_member') setFlow('os_lock'); else setFlow('messenger'); }} />;
   if (flow === 'os_lock') return <MockOS onNotificationClick={() => setFlow('splash')} />;
   if (flow === 'messenger') return <MockMessenger onLinkClick={() => setFlow('splash')} />;
   if (flow === 'splash') return <div className="flex flex-col items-center justify-center h-screen bg-white"><div className="size-14 bg-primary rounded-xl flex items-center justify-center mb-4 shadow-sm"><span className="material-symbols-outlined text-white text-3xl" style={{fontVariationSettings:"'FILL' 1"}}>restaurant</span></div><h1 className="text-xl font-bold text-gray-900">SoulTable</h1></div>;
-  if (flow === 'login') return <LoginView onLogin={() => setFlow('onboarding')} />;
-  if (flow === 'onboarding') return <OnboardingView onComplete={() => setFlow('main')} />;
+  if (flow === 'login') return <LoginView onLogin={() => setFlow('main')} />;
 
   return (
     <div className="flex justify-center bg-gray-100 min-h-screen font-display overflow-hidden">
@@ -181,26 +211,41 @@ const App: React.FC = () => {
               restaurantName={RESTAURANTS[0].name}
             />
           )}
+
+          {showSettings && (
+            <SettingsView 
+              onClose={() => setShowSettings(false)}
+              language={appLanguage}
+              onLanguageChange={setAppLanguage}
+              onLogout={() => { setShowSettings(false); setRole(null); setFlow('role_select'); setView(NavItem.EXPLORE); setActiveChatId(null); }}
+            />
+          )}
         </div>
 
         {!activeChatId && !isAtDepth && (
-          <nav className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-gray-200 px-2 pt-2 pb-8 flex justify-between items-center z-[100]">
+          <nav className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 pt-2 pb-[0.8rem] flex justify-between items-center z-[100]">
             <NavBtn active={view === NavItem.EXPLORE} icon="explore" label="Home" onClick={() => setView(NavItem.EXPLORE)} />
             <NavBtn active={view === NavItem.DINING} icon="calendar_month" label="Schedule" onClick={() => setView(NavItem.DINING)} />
             <NavBtn active={view === NavItem.GROUPS} icon="forum" label="Chat" onClick={() => setView(NavItem.GROUPS)} />
             <NavBtn active={view === NavItem.PROFILE} icon="person" label="My" onClick={() => setView(NavItem.PROFILE)} />
           </nav>
         )}
-
-        {!isAtDepth && !activeChatId && (
-          <button
-            onClick={() => { setRole(null); setFlow('role_select'); setView(NavItem.EXPLORE); setActiveChatId(null); }}
-            className="absolute top-12 left-4 z-[101] size-9 bg-white text-gray-600 rounded-lg flex items-center justify-center border border-gray-200 active:scale-90 transition-all hover:bg-muted"
-          >
-            <span className="material-symbols-outlined text-lg">logout</span>
-          </button>
-        )}
       </div>
+
+      {/* Edit Onboarding Overlay */}
+      {showEditOnboarding && (
+        <div className="absolute inset-0 z-[200]">
+          <OnboardingView 
+            initialData={userDietProfile || undefined}
+            isEditMode
+            onClose={() => setShowEditOnboarding(false)}
+            onComplete={(data) => {
+              setUserDietProfile(data);
+              setShowEditOnboarding(false);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
