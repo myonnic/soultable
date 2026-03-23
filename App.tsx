@@ -42,7 +42,7 @@ const App: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showEditOnboarding, setShowEditOnboarding] = useState(false);
   const [userDietProfile, setUserDietProfile] = useState<OnboardingData | null>(null);
-  const [appLanguage, setAppLanguage] = useState<'ko' | 'en'>('ko');
+  const [appLanguage, setAppLanguage] = useState<'ko' | 'en'>('en');
   
   const [selectedResId, setSelectedResId] = useState<string | null>(null);
   const [recommendationList, setRecommendationList] = useState<string[] | null>(null);
@@ -151,7 +151,7 @@ const App: React.FC = () => {
   };
 
   if (flow === 'splash_intro') return <div className="flex flex-col items-center justify-center h-screen bg-primary"><div className="size-20 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-xl animate-bounce"><span className="material-symbols-outlined text-primary text-5xl" style={{fontVariationSettings:"'FILL' 1"}}>restaurant</span></div><h1 className="text-3xl font-bold text-white tracking-tight">SoulTable</h1><p className="text-white/80 mt-2 font-medium text-sm">Everyone at the table.</p></div>;
-  if (flow === 'welcome') return <div className="flex flex-col items-center justify-between h-screen bg-white p-6 pt-32 pb-12 animate-in fade-in duration-500"><div className="flex flex-col items-center text-center"><div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-8"><span className="material-symbols-outlined text-primary text-4xl" style={{fontVariationSettings:"'FILL' 1"}}>restaurant</span></div><h1 className="text-2xl font-bold text-gray-900 mb-3">Welcome to SoulTable!</h1><p className="text-sm text-gray-500 leading-relaxed max-w-[280px]">서로 다른 식단을 가진 모두가 함께 즐길 수 있는 식당을 찾아보세요.</p></div><button onClick={() => setFlow('onboarding')} className="w-full max-w-[430px] h-14 bg-primary text-white rounded-xl font-bold text-base shadow-lg shadow-primary/30 active:scale-95 transition-transform hover:bg-primary-dark">시작하기 (Get Started)</button></div>;
+  if (flow === 'welcome') return <div className="flex flex-col items-center justify-between h-screen bg-white p-6 pt-32 pb-12 animate-in fade-in duration-500"><div className="flex flex-col items-center text-center"><div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-8"><span className="material-symbols-outlined text-primary text-4xl" style={{fontVariationSettings:"'FILL' 1"}}>restaurant</span></div><h1 className="text-2xl font-bold text-gray-900 mb-3">Welcome to SoulTable!</h1><p className="text-sm text-gray-500 leading-relaxed max-w-[280px]">Find the perfect dining spot that everyone can enjoy, regardless of their dietary preferences.</p></div><button onClick={() => setFlow('onboarding')} className="w-full max-w-[430px] h-14 bg-primary text-white rounded-xl font-bold text-base shadow-lg shadow-primary/30 active:scale-95 transition-transform hover:bg-primary-dark">Get Started</button></div>;
   if (flow === 'onboarding') return <OnboardingView onComplete={(data) => { setUserDietProfile(data); setFlow('role_select'); }} />;
   if (flow === 'role_select') return <RoleSelector onSelect={(r) => { setRole(r); if (r === 'host') setFlow('main'); else if (r === 'guest_member') setFlow('os_lock'); else setFlow('messenger'); }} />;
   if (flow === 'os_lock') return <MockOS onNotificationClick={() => setFlow('splash')} />;
@@ -163,7 +163,7 @@ const App: React.FC = () => {
     <div className="flex justify-center bg-gray-100 min-h-screen font-display overflow-hidden">
       <div className="relative w-full max-w-[430px] bg-white shadow-sm border-x border-gray-200 h-screen flex flex-col overflow-hidden">
         
-        <div className="flex-1 overflow-y-auto relative bg-gray-50 pb-20">
+        <div className="flex-1 overflow-y-auto relative bg-gray-50 pb-[0.8rem] flex flex-col mb-[60px]">
           {renderView()}
 
           {activeVotingId && (

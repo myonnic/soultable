@@ -138,7 +138,7 @@ const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick, onLogout })
   };
 
   return (
-    <div className="h-full w-full relative overflow-hidden bg-gray-100 font-display">
+    <div className="flex-1 w-full relative overflow-hidden bg-gray-100 font-display flex flex-col">
       {/* Top bar */}
       <div className="absolute top-0 left-0 right-0 z-[110] p-4 pt-4 flex flex-col gap-2 pointer-events-none">
         <div className="flex gap-2">
@@ -181,7 +181,7 @@ const HomeView: React.FC<Props> = ({ onPlanClick, onRestaurantClick, onLogout })
       </div>
 
       {/* 지도 컨테이너 */}
-      <div ref={mapContainerRef} className="w-full h-full" />
+      <div ref={mapContainerRef} className="absolute inset-0" />
 
       {/* 상태 오버레이 */}
       {mapStatus === 'loading' && (
