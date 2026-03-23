@@ -136,7 +136,7 @@ const OnboardingView: React.FC<OnboardingProps> = ({ onComplete, initialData, is
             {isEditMode ? (
               <button 
                 onClick={() => {
-                  if (window.confirm('나가시겠어요? 지금까지 변경한 내용은 반영되지 않습니다.')) {
+                  if (window.confirm('Are you sure you want to exit? Your changes will not be saved.')) {
                     onClose?.();
                   }
                 }} 
@@ -156,19 +156,19 @@ const OnboardingView: React.FC<OnboardingProps> = ({ onComplete, initialData, is
           {currentStep === 'step1' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <h1 className="text-xl font-bold text-gray-900 mb-1">Which best describes your diet?</h1>
-              <p className="text-sm text-gray-500 mb-6">회원님의 기본 식습관을 알려주세요.</p>
+              <p className="text-sm text-gray-500 mb-6">Please tell us about your basic dietary habits.</p>
               
               <div className="space-y-3">
                 <OptionCard 
-                  emoji="🍽️" title="I eat everything — no restrictions" subtitle="제한 없이 모두 먹음"
+                  emoji="🍽️" title="I eat everything — no restrictions" subtitle="Eat everything without restrictions"
                   selected={dietType === 'all'} onClick={() => handleDietTypeSelect('all')}
                 />
                 <OptionCard 
-                  emoji="🌿" title="I'm vegetarian or vegan" subtitle="채식주의자 / 비건"
+                  emoji="🌿" title="I'm vegetarian or vegan" subtitle="Vegetarian / Vegan"
                   selected={dietType === 'vegetarian_vegan'} onClick={() => handleDietTypeSelect('vegetarian_vegan')}
                 />
                 <OptionCard 
-                  emoji="🕌" title="I follow religious dietary rules" subtitle="종교적 식이 규칙을 따름"
+                  emoji="🕌" title="I follow religious dietary rules" subtitle="Follow religious dietary rules"
                   selected={dietType === 'religious'} onClick={() => handleDietTypeSelect('religious')}
                 />
               </div>
@@ -179,16 +179,16 @@ const OnboardingView: React.FC<OnboardingProps> = ({ onComplete, initialData, is
           {currentStep === 'step1.5A' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <h1 className="text-xl font-bold text-gray-900 mb-1">What type of vegetarian/vegan are you?</h1>
-              <p className="text-sm text-gray-500 mb-6">채식의 정확한 단계를 선택해 주세요.</p>
+              <p className="text-sm text-gray-500 mb-6">Please select your exact level of vegetarianism.</p>
               
               <div className="space-y-3">
                 {[
-                  { id: 'flexitarian', emoji: '🥩', t: 'Flexitarian', d: '주로 채식, 가끔 육류 섭취' },
-                  { id: 'pescatarian', emoji: '🐟', t: 'Pescatarian', d: '해산물은 섭취' },
-                  { id: 'vegetarian', emoji: '🥚', t: 'Vegetarian', d: '유제품·달걀 섭취' },
-                  { id: 'lacto', emoji: '🥛', t: 'Lacto-vegetarian', d: '유제품만 섭취' },
-                  { id: 'vegan', emoji: '🌱', t: 'Vegan', d: '모든 동물성 식품 제외' },
-                  { id: 'strict_vegan', emoji: '🌿', t: 'Strict Vegan', d: '젤라틴 등 숨겨진 동물성도 제외' }
+                  { id: 'flexitarian', emoji: '🥩', t: 'Flexitarian', d: 'Mostly vegetarian, occasional meat' },
+                  { id: 'pescatarian', emoji: '🐟', t: 'Pescatarian', d: 'Eats seafood' },
+                  { id: 'vegetarian', emoji: '🥚', t: 'Vegetarian', d: 'Eats dairy and eggs' },
+                  { id: 'lacto', emoji: '🥛', t: 'Lacto-vegetarian', d: 'Eats dairy only' },
+                  { id: 'vegan', emoji: '🌱', t: 'Vegan', d: 'Excludes all animal products' },
+                  { id: 'strict_vegan', emoji: '🌿', t: 'Strict Vegan', d: 'Excludes hidden animal products like gelatin' }
                 ].map(opt => (
                   <OptionCard 
                     key={opt.id} emoji={opt.emoji} title={opt.t} subtitle={opt.d}
@@ -203,15 +203,15 @@ const OnboardingView: React.FC<OnboardingProps> = ({ onComplete, initialData, is
           {currentStep === 'step1.5B' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <h1 className="text-xl font-bold text-gray-900 mb-1">Which religious guidelines do you follow?</h1>
-              <p className="text-sm text-gray-500 mb-6">종교적 식이 규칙을 선택해 주세요.</p>
+              <p className="text-sm text-gray-500 mb-6">Please select your religious dietary rules.</p>
               
               <div className="space-y-3">
                 {[
-                  { id: 'halal', emoji: '☪️', t: 'Halal (Muslim)', d: '고기는 할랄 인증 필요' },
-                  { id: 'kosher', emoji: '✡️', t: 'Kosher (Jewish)', d: '육류+유제품 혼합 불가' },
-                  { id: 'hindu', emoji: '🕉️', t: 'Hindu', d: '소고기 금지 등' },
-                  { id: 'buddhist', emoji: '☸️', t: 'Buddhist', d: '육류 빛 일부 향채소 제한' },
-                  { id: 'other', emoji: '🙏', t: 'Other', d: '직접 입력' }
+                  { id: 'halal', emoji: '☪️', t: 'Halal (Muslim)', d: 'Meat must be halal certified' },
+                  { id: 'kosher', emoji: '✡️', t: 'Kosher (Jewish)', d: 'Cannot mix meat and dairy' },
+                  { id: 'hindu', emoji: '🕉️', t: 'Hindu', d: 'No beef, etc.' },
+                  { id: 'buddhist', emoji: '☸️', t: 'Buddhist', d: 'Restricts meat and pungent vegetables' },
+                  { id: 'other', emoji: '🙏', t: 'Other', d: 'Enter manually' }
                 ].map(opt => (
                   <OptionCard 
                     key={opt.id} emoji={opt.emoji} title={opt.t} subtitle={opt.d}
@@ -234,49 +234,49 @@ const OnboardingView: React.FC<OnboardingProps> = ({ onComplete, initialData, is
           {currentStep === 'step2' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <h1 className="text-xl font-bold text-gray-900 mb-1">Any ingredients you absolutely cannot eat?</h1>
-              <p className="text-sm text-gray-500 mb-4">절대 먹지 못하는 재료나 알레르기를 모두 선택해 주세요.</p>
+              <p className="text-sm text-gray-500 mb-4">Please select all ingredients you absolutely cannot eat or are allergic to.</p>
               
               <Section 
-                title="Meat & Animal Products (육류·동물성)"
+                title="Meat & Animal Products"
                 options={[
-                  { id: 'pork', emoji: '🐷', t: 'Pork & pork products', d: '돼지고기 관련' },
-                  { id: 'beef', emoji: '🐄', t: 'Beef', d: '소고기' },
-                  { id: 'poultry', emoji: '🍗', t: 'Poultry', d: '닭고기, 오리고기' },
-                  { id: 'shellfish', emoji: '🦐', t: 'Shellfish & seafood', d: '새우, 조개 등 해산물' },
-                  { id: 'fish', emoji: '🐟', t: 'Fish', d: '생선' },
-                  { id: 'eggs', emoji: '🥚', t: 'Eggs', d: '달걀' },
-                  { id: 'dairy', emoji: '🥛', t: 'Dairy', d: '유제품' },
-                  { id: 'honey', emoji: '🍯', t: 'Honey', d: '꿀' },
+                  { id: 'pork', emoji: '🐷', t: 'Pork & pork products', d: 'Pork related' },
+                  { id: 'beef', emoji: '🐄', t: 'Beef', d: 'Beef' },
+                  { id: 'poultry', emoji: '🍗', t: 'Poultry', d: 'Chicken, duck' },
+                  { id: 'shellfish', emoji: '🦐', t: 'Shellfish & seafood', d: 'Shrimp, clams, etc.' },
+                  { id: 'fish', emoji: '🐟', t: 'Fish', d: 'Fish' },
+                  { id: 'eggs', emoji: '🥚', t: 'Eggs', d: 'Eggs' },
+                  { id: 'dairy', emoji: '🥛', t: 'Dairy', d: 'Dairy products' },
+                  { id: 'honey', emoji: '🍯', t: 'Honey', d: 'Honey' },
                 ]}
                 selected={cannotEat} toggle={toggleCannotEat}
               />
               
               <Section 
-                title="Allergens (알레르기 유발)"
+                title="Allergens"
                 options={[
-                  { id: 'peanuts', emoji: '🥜', t: 'Peanuts', d: '땅콩' },
-                  { id: 'tree_nuts', emoji: '🌰', t: 'Tree nuts', d: '아몬드, 호두 등' },
-                  { id: 'gluten', emoji: '🌾', t: 'Gluten / Wheat', d: '글루텐, 밀' },
-                  { id: 'soy', emoji: '🫘', t: 'Soy & soy products', d: '대두, 콩류' },
-                  { id: 'sesame', emoji: '🌿', t: 'Sesame', d: '참깨' },
+                  { id: 'peanuts', emoji: '🥜', t: 'Peanuts', d: 'Peanuts' },
+                  { id: 'tree_nuts', emoji: '🌰', t: 'Tree nuts', d: 'Almonds, walnuts, etc.' },
+                  { id: 'gluten', emoji: '🌾', t: 'Gluten / Wheat', d: 'Gluten, wheat' },
+                  { id: 'soy', emoji: '🫘', t: 'Soy & soy products', d: 'Soybeans, legumes' },
+                  { id: 'sesame', emoji: '🌿', t: 'Sesame', d: 'Sesame' },
                 ]}
                 selected={cannotEat} toggle={toggleCannotEat}
               />
 
               <Section 
-                title="⚠️ Hidden in Korean Food (한국 음식 주의)"
+                title="⚠️ Hidden in Korean Food"
                 options={[
-                  { id: 'alcohol', emoji: '🍶', t: 'Alcohol (in cooking)', d: '요리용 알코올' },
-                  { id: 'jeotgal', emoji: '🐠', t: 'Fermented seafood (jeotgal)', d: '새우젓, 멸치액젓' },
-                  { id: 'garlic', emoji: '🧄', t: 'Garlic', d: '마늘' },
-                  { id: 'msg', emoji: '💊', t: 'MSG / artificial flavor', d: '인공 조미료' },
+                  { id: 'alcohol', emoji: '🍶', t: 'Alcohol (in cooking)', d: 'Cooking alcohol' },
+                  { id: 'jeotgal', emoji: '🐠', t: 'Fermented seafood (jeotgal)', d: 'Shrimp paste, fish sauce' },
+                  { id: 'garlic', emoji: '🧄', t: 'Garlic', d: 'Garlic' },
+                  { id: 'msg', emoji: '💊', t: 'MSG / artificial flavor', d: 'Artificial seasoning' },
                 ]}
                 selected={cannotEat} toggle={toggleCannotEat}
               />
               
               <div className="mt-6 mb-2">
                 <OptionCard 
-                  emoji="✅" title="None of the above" subtitle="해당 사항 없음"
+                  emoji="✅" title="None of the above" subtitle="None of the above"
                   selected={cannotEat.includes('none')} onClick={() => toggleCannotEat('none')}
                 />
               </div>
@@ -287,18 +287,18 @@ const OnboardingView: React.FC<OnboardingProps> = ({ onComplete, initialData, is
           {currentStep === 'step3' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <h1 className="text-xl font-bold text-gray-900 mb-1">Anything you'd prefer to avoid?</h1>
-              <p className="text-sm text-gray-500 mb-4">알레르기는 아니지만 피하고 싶은 음식이 있나요? (선택 사항)</p>
+              <p className="text-sm text-gray-500 mb-4">Are there any foods you'd prefer to avoid? (Optional)</p>
               
               <div className="grid grid-cols-2 gap-2 mb-6">
                 {[
-                  { id: 'spicy', emoji: '🌶️', t: 'Very spicy food', d: '매우 매운 음식' },
-                  { id: 'fermented', emoji: '🥢', t: 'Fermented foods', d: '김치 등 발효식품' },
-                  { id: 'raw', emoji: '🥩', t: 'Raw meat/fish', d: '회, 육회 등 날것' },
-                  { id: 'offal', emoji: '🫀', t: 'Offal & organ meats', d: '곱창, 내장류' },
-                  { id: 'pungent', emoji: '💨', t: 'Strong pungent', d: '강한 향의 식재료' },
-                  { id: 'mushroom', emoji: '🍄', t: 'Mushrooms', d: '버섯류' },
-                  { id: 'tofu', emoji: '🧆', t: 'Tofu & soy-based', d: '두부 가공식품' },
-                  { id: 'game', emoji: '🐾', t: 'Exotic meats', d: '특수 육류' },
+                  { id: 'spicy', emoji: '🌶️', t: 'Very spicy food', d: 'Very spicy food' },
+                  { id: 'fermented', emoji: '🥢', t: 'Fermented foods', d: 'Kimchi, fermented foods' },
+                  { id: 'raw', emoji: '🥩', t: 'Raw meat/fish', d: 'Raw fish, raw meat' },
+                  { id: 'offal', emoji: '🫀', t: 'Offal & organ meats', d: 'Tripe, offal' },
+                  { id: 'pungent', emoji: '💨', t: 'Strong pungent', d: 'Strong smelling ingredients' },
+                  { id: 'mushroom', emoji: '🍄', t: 'Mushrooms', d: 'Mushrooms' },
+                  { id: 'tofu', emoji: '🧆', t: 'Tofu & soy-based', d: 'Processed tofu products' },
+                  { id: 'game', emoji: '🐾', t: 'Exotic meats', d: 'Exotic meats' },
                 ].map(opt => (
                   <CompactOption 
                     key={opt.id} emoji={opt.emoji} title={opt.t} subtitle={opt.d}
@@ -308,7 +308,7 @@ const OnboardingView: React.FC<OnboardingProps> = ({ onComplete, initialData, is
               </div>
               
               <OptionCard 
-                emoji="🎉" title="Nothing — I'm adventurous!" subtitle="다 괜찮습니다!"
+                emoji="🎉" title="Nothing — I'm adventurous!" subtitle="Everything is fine!"
                 selected={dislikes.includes('none')} onClick={() => toggleDislike('none')}
               />
             </div>
